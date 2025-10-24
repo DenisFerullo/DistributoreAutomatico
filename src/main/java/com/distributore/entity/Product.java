@@ -46,7 +46,7 @@ public class Product {
 	private Integer re_StockValue;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	@JoinColumn(name = "category_id")
-	private List<Category> categoria;
+	@JoinColumn(name = "categories_id")
+	private Category categoria;
 
 }
