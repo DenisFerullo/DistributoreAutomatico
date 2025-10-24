@@ -9,6 +9,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -42,7 +44,8 @@ public class Distributore {
 	@Column(name = "working")
 	private boolean isWorking;
 	
-	@Column(name = "location")
+	@ManyToOne
+	@JoinColumn(name = "locations_id")
 	private Location location;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
