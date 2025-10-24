@@ -1,12 +1,18 @@
 package com.distributore.entity;
 
+import java.util.List;
+
 import org.hibernate.annotations.Check;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 
@@ -18,7 +24,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "product")
+@Table(name = "products")
 @Check(constraints = "quantita >= 0")
 public class Product {
 
@@ -27,13 +33,20 @@ public class Product {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	@Column(name = "nome", nullable = false, unique = false)
+	@Column(name = "nome",  unique = false)
 	private String nome;
+	
+	@Column(name = "prezzo")
+	private Double prezzo;
 	
 	@Column(name = "quantita")
 	private Long quantita; 
 	
 	@Column(name = "re_StockValue")
 	private Integer re_StockValue;
+	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@JoinColumn(name = "category_id")
+	private List<Category> categoria;
 
 }

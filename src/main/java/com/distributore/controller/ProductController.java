@@ -38,14 +38,24 @@ public class ProductController {
 	}
 	
 	
-	@GetMapping("/view/{nome}")
+	@GetMapping("/info/{nome}")
 	public ResponseEntity<Long> mostraQuantitaDelProdottoConNome(@PathVariable String nome) {
 		return ResponseEntity
 				.ok(
 						productService
 							.getByNome(nome)
-							.quantita()
+						.quantita()
 					);
+	}
+	
+	
+	@GetMapping("/infoProdotto/{id}")
+	public ResponseEntity<ProductDto> mostraProdotto(@PathVariable Long id) {
+		return ResponseEntity
+				.ok(
+						productService
+						.getById(id)
+						);
 	}
 	
  

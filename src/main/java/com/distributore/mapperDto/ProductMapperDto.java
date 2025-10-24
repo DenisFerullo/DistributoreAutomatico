@@ -10,6 +10,12 @@ public class ProductMapperDto {
 		return new ProductDto(p.getId(), p.getNome(), p.getQuantita(), p.getRe_StockValue());
 
 	}
+	
+	public static void updateAttoreFromDto(ProductDto pDto , Product p) {
+		p.setNome(pDto.nome());
+		p.setQuantita(pDto.quantita());
+		p.setRe_StockValue(pDto.re_StockValue());
+	}
 
 	public static Product newProduct(ProductDto productDto) {
 		Product product = new Product();
@@ -18,4 +24,5 @@ public class ProductMapperDto {
 		product.setRe_StockValue(productDto.re_StockValue());
 		return product;
 	}
+	
 }

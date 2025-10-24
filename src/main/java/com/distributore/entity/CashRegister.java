@@ -1,14 +1,15 @@
 package com.distributore.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -22,35 +23,31 @@ import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-
 @Entity
-@Table(name = "distributori")
-public class Distributore {
+@Table(name = "cash_register")
+public class CashRegister {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@EqualsAndHashCode.Include
 	private Long id;
-	
+
 	@Column(name = "nome")
 	private String nome;
-	
-	@Column(name = "working")
-	private boolean isWorking;
-	
-	@Column(name = "location")
-	private Location location;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	@Column(name = "prodotti")
-	private List<Product> prodotti;
+	@Column(name = "total_cash")
+	private Double totalCash;
+
+	@Column(name = "orario")
+	private LocalDateTime orario;
 	
-	@OneToOne(mappedBy = "distributore", cascade = CascadeType.ALL)
-	private CashRegister cashRegister;
-	
+	@OneToOne
+	@JoinColumn(name="distributore_id")
+	private Distributore distributore;
+	@OneToMany(mappedBy="cashRegister", cascade = CascadeType.ALL)
+	private List<SellRegister> sales;  
 }

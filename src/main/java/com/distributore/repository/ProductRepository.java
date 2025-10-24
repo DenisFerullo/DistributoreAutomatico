@@ -6,5 +6,5 @@ import com.distributore.entity.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-	Product findByNome(String nome);
+	Product findDistinctByNome(String nome);
 }
