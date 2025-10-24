@@ -1,6 +1,5 @@
 package com.distributore.entity;
 
-import java.util.List;
 
 import org.hibernate.annotations.Check;
 

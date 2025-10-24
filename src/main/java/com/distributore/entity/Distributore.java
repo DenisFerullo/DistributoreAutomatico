@@ -27,7 +27,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-
 @Entity
 @Table(name = "distributori")
 public class Distributore {

@@ -32,14 +32,12 @@ public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
-	@Column(name ="id")
-	Long id;
-	
+	private Long id;
+
 	@Column(name = "nome", nullable = false, unique = true)
-	String nome;
-	
+	private String nome;
+
 	@OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
 	private List<Product> prodotti;
-	
-	
+
 }
