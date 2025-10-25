@@ -3,6 +3,9 @@ package com.distributore.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,9 +49,18 @@ public class CashRegister {
 	@Column(name = "orario")
 	private LocalDateTime orario;
 	
+	@CreationTimestamp
+	@Column(name = "created_at", updatable = false)
+	private LocalDateTime createdAt;
+
+	@UpdateTimestamp  
+	@Column(name = "updated_at")
+	private LocalDateTime updatedAt;	
+	
 	@OneToOne
 	@JoinColumn(name="distributore_id")
 	private Distributore distributore;
+	
 	@OneToMany(mappedBy="cashRegister", cascade = CascadeType.ALL)
-	private List<SellRegister> sales;  
+	private List<SalesRegister> sales;  
 }

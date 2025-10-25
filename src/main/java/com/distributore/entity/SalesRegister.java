@@ -26,8 +26,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "sell_register")
-public class SellRegister {
+@Table(name = "sales")
+public class SalesRegister {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

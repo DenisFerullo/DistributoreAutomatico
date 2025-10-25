@@ -1,6 +1,11 @@
 package com.distributore.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,10 +42,18 @@ public class Inventory {
 	@Column(name = "nome", unique = true)
 	private String nome;
 	
+	@Column(name = "capacita_massima")
+	private Integer capacitaMassima;
+	
+	@CreationTimestamp
+	@Column(name = "created_at", updatable = false)
+	private LocalDateTime createdAt;
+
+	@UpdateTimestamp  
+	@Column(name = "updated_at")
+	private LocalDateTime updatedAt;	
+
 	@ManyToMany
 	@JoinTable(name = "inventory_products", joinColumns = @JoinColumn(name = "inventory_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
 	private List<Product> prodotti;
-
-	@Column(name = "capacita_massima")
-	private Integer capacitaMassima;
 }

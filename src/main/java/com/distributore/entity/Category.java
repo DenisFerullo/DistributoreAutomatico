@@ -1,6 +1,10 @@
 package com.distributore.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,5 +43,13 @@ public class Category {
 
 	@OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
 	private List<Product> prodotti;
+	
+	@CreationTimestamp
+	@Column(name = "created_at", updatable = false)
+	private LocalDateTime createdAt;
+
+	@UpdateTimestamp  
+	@Column(name = "updated_at")
+	private LocalDateTime updatedAt;
 
 }

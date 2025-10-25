@@ -31,8 +31,11 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
 	private Long id;
-
-	@Column(name = "nome",  unique = false)
+	
+    @Column(name = "sku")
+	private String sku;
+	
+    @Column(name = "nome",  unique = false)
 	private String nome;
 	
 	@Column(name = "prezzo")
@@ -41,7 +44,7 @@ public class Product {
 	@Column(name = "quantita")
 	private Long quantita; 
 	
-	@Column(name = "re_StockValue")
+	@Column(name = "re_stock_value")
 	private Integer re_StockValue;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
