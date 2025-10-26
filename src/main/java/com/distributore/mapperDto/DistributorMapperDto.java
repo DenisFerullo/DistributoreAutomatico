@@ -1,5 +1,5 @@
 package com.distributore.mapperDto;
 
-public class DistributoreMapperDto {
+public class DistributorMapperDto {
 
 }

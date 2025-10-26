@@ -53,5 +53,5 @@ public class SalesRegister {
 	
 	@ManyToOne
 	@JoinColumn(name = "distributore_id")
-	private Distributore distributore;
+	private Distributor distributore;
 }

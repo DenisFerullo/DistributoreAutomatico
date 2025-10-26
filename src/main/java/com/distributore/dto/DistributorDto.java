@@ -1,5 +1,5 @@
 package com.distributore.dto;
 
-public class DistributoreDto {
+public class DistributorDto {
 
 }

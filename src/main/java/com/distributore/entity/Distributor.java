@@ -35,7 +35,7 @@ import lombok.ToString;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "distributor")
-public class Distributore {
+public class Distributor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

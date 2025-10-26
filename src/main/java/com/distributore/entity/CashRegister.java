@@ -59,7 +59,7 @@ public class CashRegister {
 	
 	@OneToOne
 	@JoinColumn(name="distributore_id")
-	private Distributore distributore;
+	private Distributor distributore;
 	
 	@OneToMany(mappedBy="cashRegister", cascade = CascadeType.ALL)
 	private List<SalesRegister> sales;  
