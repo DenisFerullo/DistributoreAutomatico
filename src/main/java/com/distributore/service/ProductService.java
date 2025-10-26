@@ -29,7 +29,7 @@ public class ProductService {
 
 	public ProductDto edit(ProductDto pDto, Long id) {
 		return productRepository.findById(id).map(p -> {
-             ProductMapperDto.updateAttoreFromDto(pDto, p);
+             ProductMapperDto.updateProductFromDto(pDto, p);
              
 			return ProductMapperDto.productToProductDto(productRepository.save(p) /* updatedProduct */
 			);
@@ -66,8 +66,6 @@ public class ProductService {
 	}
 
 	public ProductDto getById(Long id) {
-
-		
 		return ProductMapperDto.productToProductDto(productRepository.findById(id).orElse(null));
 	}
 }

@@ -37,7 +37,6 @@ public class ProductController {
 					);
 	}
 	
-	
 	@GetMapping("/info/{nome}")
 	public ResponseEntity<Long> mostraQuantitaDelProdottoConNome(@PathVariable String nome) {
 		return ResponseEntity

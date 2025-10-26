@@ -1,8 +1,6 @@
 package com.distributore.entity;
 
-
 import org.hibernate.annotations.Check;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

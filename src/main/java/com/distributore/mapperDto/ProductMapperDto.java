@@ -7,14 +7,15 @@ public class ProductMapperDto {
 
 	public static ProductDto productToProductDto(Product p) {
 
-		return new ProductDto(p.getId(), p.getNome(), p.getQuantita(), p.getRe_StockValue());
+		return new ProductDto(p.getId(), p.getNome(), p.getQuantita(), p.getRe_StockValue(), p.getPrezzo());
 
 	}
 	
-	public static void updateAttoreFromDto(ProductDto pDto , Product p) {
+	public static void updateProductFromDto(ProductDto pDto , Product p) {
 		p.setNome(pDto.nome());
 		p.setQuantita(pDto.quantita());
 		p.setRe_StockValue(pDto.re_StockValue());
+		p.setPrezzo(pDto.prezzo());
 	}
 
 	public static Product newProduct(ProductDto productDto) {

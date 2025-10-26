@@ -5,10 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.distributore.entity.Distributor;
+import com.distributore.dto.DistributorDto;
 import com.distributore.service.DistributorService;
-
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,9 +17,9 @@ public class DistributorController {
 	private final DistributorService distributoreService;
 
 	@GetMapping("/view")
-	public ResponseEntity<List<Distributor>> visualizzaInventario() {
+	public ResponseEntity<List<DistributorDto>> mostraListaDistributori() {
 
-		List<Distributor> distributore = distributoreService.getAll();
+		List<DistributorDto> distributore = distributoreService.getAll();
 
 		return ResponseEntity.ok(distributore);
 	}
