@@ -2,7 +2,6 @@ package com.distributore.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import com.distributore.entity.CashRegister;
 import com.distributore.entity.Location;
 import com.distributore.entity.Product;

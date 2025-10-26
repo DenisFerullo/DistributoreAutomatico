@@ -61,10 +61,13 @@ public class VendingMachineService {
 // --------------------------------------------------------------------------- //		
 
 		
-		// 5. Registra vendita
-		// 6. Aggiorna cassa
-		// 7. Decrementa scorte
-		// 8. Ritorna risultato
+		// 5. Registra vendita 	-- 	SalesRegister
+		
+		
+		
+		// 6. Aggiorna cassa	--  	
+		// 7. Decrementa scorte	--	 
+		// 8. Ritorna risultato	
 
 		return new PurchaseResult(false, "", null, null, LocalDateTime.now());
 	}
