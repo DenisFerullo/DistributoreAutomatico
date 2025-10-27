@@ -37,11 +37,11 @@ public class Inventory {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	@Column(name = "nome", unique = true)
-	private String nome;
+	@Column(name = "name", unique = true)
+	private String name;
 	
-	@Column(name = "capacita_massima")
-	private Integer capacitaMassima;
+	@Column(name = "maximum_capacity")
+	private Integer maxCapacity;
 	
 	@CreationTimestamp
 	@Column(name = "created_at", updatable = false)
@@ -53,5 +53,5 @@ public class Inventory {
 
 	@ManyToMany
 	@JoinTable(name = "inventory_products", joinColumns = @JoinColumn(name = "inventory_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
-	private List<Product> prodotti;
+	private List<Product> products;
 }

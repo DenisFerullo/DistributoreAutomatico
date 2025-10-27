@@ -1,6 +1,9 @@
 package com.distributore.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,24 +36,32 @@ public class SalesRegister {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	@Column(name = "data_vendita")
-	private LocalDateTime dataVendita;
+	@Column(name = "sale_date")
+	private LocalDateTime saleDate;
 
-	@Column(name = "quantita_venduta")
-	private Integer quantitaVenduta;
+	@Column(name = "sold_quantity")
+	private Integer soldQuantity;
 
-	@Column(name = "importo_totale")
-	private Double importoTotale;
+	@Column(name = "total_amount", precision = 10, scale = 2)
+	private BigDecimal totalAmount;
 
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private Product product;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "cashRegister_id")
+	@JoinColumn(name = "cash_register_id")
 	private CashRegister cashRegister;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "distributore_id")
-	private Distributor distributore;
+	@JoinColumn(name = "distributor_id")
+	private Distributor distributor;
+
+	@CreationTimestamp
+	@Column(name = "created_at", updatable = false)
+	private LocalDateTime createdAt;
+
+	@UpdateTimestamp
+	@Column(name = "updated_at")
+	private LocalDateTime updatedAt;
 }

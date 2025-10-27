@@ -1,13 +1,12 @@
 package com.distributore.dto;
 
+import java.math.BigDecimal;
+
 public record PurchaseRequest(
 	    
 		Long productId,
-	    
 	    Long distributorId, 
-	    
-	    Double insertedAmount,
-	   
+	    BigDecimal insertedAmount,
 	    Integer quantity
 	
 		) {}

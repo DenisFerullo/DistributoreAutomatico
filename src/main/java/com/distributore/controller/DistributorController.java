@@ -19,7 +19,7 @@ public class DistributorController {
 	@GetMapping("/view")
 	public ResponseEntity<List<DistributorDto>> mostraListaDistributori() {
 
-		List<DistributorDto> distributore = distributoreService.getAll();
+		List<DistributorDto> distributore = distributoreService.getAllAsDto();
 
 		return ResponseEntity.ok(distributore);
 	}

@@ -1,6 +1,10 @@
 package com.distributore.entity;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import org.hibernate.annotations.Check;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,31 +26,38 @@ import lombok.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "products")
-@Check(constraints = "quantita >= 0")
+@Check(constraints = "quantity >= 0")
 public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
 	private Long id;
-	
-    @Column(name = "sku")
+
+	@Column(name = "sku")
 	private String sku;
-	
-    @Column(name = "nome",  unique = false)
-	private String nome;
-	
-	@Column(name = "prezzo")
-	private Double prezzo;
-	
-	@Column(name = "quantita")
-	private Long quantita; 
-	
+
+	@Column(name = "name", unique = false)
+	private String name;
+
+	@Column(name = "price", precision = 10, scale = 2)
+	private BigDecimal price;
+
+	@Column(name = "quantity")
+	private Long quantity;
+
 	@Column(name = "re_stock_value")
 	private Integer re_StockValue;
-	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	@JoinColumn(name = "categories_id")
-	private Category categoria;
 
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@JoinColumn(name = "category_id")
+	private Category category;
+
+	@CreationTimestamp
+	@Column(name = "created_at", updatable = false)
+	private LocalDateTime createdAt;
+
+	@UpdateTimestamp
+	@Column(name = "updated_at")
+	private LocalDateTime updatedAt;
 }

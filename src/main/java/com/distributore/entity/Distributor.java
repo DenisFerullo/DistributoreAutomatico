@@ -40,10 +40,10 @@ public class Distributor {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	@Column(name = "nome")
-	private String nome;
+	@Column(name = "name")
+	private String name;
 
-	@Column(name = "stato_operativo")
+	@Column(name = "is_working")
 	private boolean isWorking;
 
 	@Column(name = "last_maintenance")
@@ -57,16 +57,17 @@ public class Distributor {
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 	
-	@OneToOne(mappedBy = "distributore", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "distributor", cascade = CascadeType.ALL)
 	private CashRegister cashRegister;
 	
 	@ManyToOne
-	@JoinColumn(name = "locations_id")
+	@JoinColumn(name = "location_id")
 	private Location location;
 	
 	@ManyToMany
-	@JoinTable(name = "distributor_products", joinColumns = @JoinColumn(name = "distributore_id"), inverseJoinColumns = @JoinColumn(name = "prodotti_id"))
-	private List<Product> prodotti;
-
-
+	@JoinTable(name = "distributor_products", 
+				joinColumns = @JoinColumn(name = "distributor_id"), 
+				inverseJoinColumns = @JoinColumn(name = "product_id")
+			)
+	private List<Product> products;
 }

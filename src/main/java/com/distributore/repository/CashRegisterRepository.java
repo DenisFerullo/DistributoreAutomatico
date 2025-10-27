@@ -1,4 +1,4 @@
-package com.distributore.service;
+package com.distributore.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.distributore.entity.CashRegister;

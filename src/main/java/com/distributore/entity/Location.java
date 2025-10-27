@@ -31,20 +31,20 @@ public class Location {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name="via" ,nullable = false, length = 60)
-	private String via;
+	@Column(name="address" ,nullable = false, length = 60)
+	private String address;
 	
-	@Column(name="numero_civico", length = 8)
-	private String numeroCivico;
+	@Column(name="house_number", length = 8)
+	private String houseNumber;
 	
 	@Column(name="cap",nullable = false,length = 5)
 	private String cap;
 	
-	@Column(name="comune",nullable = false, length = 60)
-	private String comune;
+	@Column(name="municipality",nullable = false, length = 60)
+	private String municipality;
 	
-	@Column(name="provincia",nullable = false, length = 2)
-	private String provincia;
+	@Column(name="province",nullable = false, length = 2)
+	private String province;
 	
 	@CreationTimestamp
 	@Column(name = "created_at", updatable = false)
@@ -53,6 +53,4 @@ public class Location {
 	@UpdateTimestamp  
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
-	
-	
 }

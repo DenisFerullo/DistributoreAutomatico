@@ -36,11 +36,11 @@ public class Category {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	@Column(name = "nome", nullable = false, unique = true)
-	private String nome;
+	@Column(name = "name", nullable = false, unique = true)
+	private String name;
 
-	@OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
-	private List<Product> prodotti;
+	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+	private List<Product> products;
 	
 	@CreationTimestamp
 	@Column(name = "created_at", updatable = false)
@@ -49,5 +49,4 @@ public class Category {
 	@UpdateTimestamp  
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
-
 }

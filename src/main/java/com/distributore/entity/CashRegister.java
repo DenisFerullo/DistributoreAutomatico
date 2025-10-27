@@ -1,5 +1,6 @@
 package com.distributore.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,14 +39,14 @@ public class CashRegister {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	@Column(name = "nome")
-	private String nome;
+	@Column(name = "name")
+	private String name;
 
-	@Column(name = "total_cash")
-	private Double totalCash;
+	@Column(name = "total_cash", precision = 10, scale = 2)
+	private BigDecimal totalCash;
 
-	@Column(name = "orario")
-	private LocalDateTime orario;
+	@Column(name = "schedule")
+	private LocalDateTime schedule;
 	
 	@CreationTimestamp
 	@Column(name = "created_at", updatable = false)
@@ -56,8 +57,8 @@ public class CashRegister {
 	private LocalDateTime updatedAt;	
 	
 	@OneToOne
-	@JoinColumn(name="distributore_id")
-	private Distributor distributore;
+	@JoinColumn(name="distributor_id")
+	private Distributor distributor;
 	
 	@OneToMany(mappedBy="cashRegister", cascade = CascadeType.ALL)
 	private List<SalesRegister> sales;  

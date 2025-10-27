@@ -33,17 +33,17 @@ public class ProductController {
 		return ResponseEntity
 				.ok(
 						productService
-							.getInventory()
+							.getInventoryAsDto()
 					);
 	}
 	
-	@GetMapping("/info/{nome}")
+	@GetMapping("/info/{name}")
 	public ResponseEntity<Long> mostraQuantitaDelProdottoConNome(@PathVariable String nome) {
 		return ResponseEntity
 				.ok(
 						productService
-							.getByNome(nome)
-						.quantita()
+							.getDtoByNome(nome)
+						.quantity()
 					);
 	}
 	
@@ -53,7 +53,7 @@ public class ProductController {
 		return ResponseEntity
 				.ok(
 						productService
-						.getById(id)
+						.getDtoById(id)
 						);
 	}
 	
