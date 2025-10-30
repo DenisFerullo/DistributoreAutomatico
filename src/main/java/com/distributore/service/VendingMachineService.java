@@ -23,6 +23,9 @@ public class VendingMachineService {
 	private final SalesRegisterService salesRegisterService;
 	private final DistributorService distributorService;
 
+	
+// --------------------------------- IN SVILUPPO ------------------------------------------------------------------------
+	
 	@Transactional
 	public PurchaseResult processPurchase(PurchaseRequest request) {
 		
@@ -33,71 +36,115 @@ public class VendingMachineService {
 		Distributor distributor = distributorService.getEntityById(request.distributorId());
 
 		
-		// 1. Verifica che il distributore sia operativo
-		if (!distributor.isWorking())
+// 		0. Gestione reset saldo per nuova transazione
+		if (request.resetSaldo()) {
+			distributor.resetSaldoTemporale();
+			distributorService.saveEntity(distributor);
+		}
+		
+// 		1. Verifica che il distributore sia operativo
+		if ( distributor == null || !distributor.isWorking()) {
+			
+			// Se c'è saldo accumulato, lo restituiamo
+			BigDecimal saldoDaRestituire = distributor != null ?
+					distributor.getSaldoTemporale() : BigDecimal.ZERO;
+			
+			if (distributor != null) {
+				distributor.resetSaldoTemporale();
+				distributorService.saveEntity(distributor);
+			}
+			
 			return new PurchaseResult(
 						false, 
-						"Distributore non operativo", 
+						"Distributore non trovato o non operativo", 
 						null, 
-						request.insertedAmount(),
+						saldoDaRestituire,									// Restituisce il saldo accumulato
 						LocalDateTime.now()
 					);
+		}
 
 		
-		// 2. Controlla disponibilità prodotto
-		if (product == null)
+// 		2. Controlla disponibilità prodotto
+		if (product == null) {
+			
+			 // Restituisce il saldo accumulato
+            BigDecimal saldoDaRestituire = distributor.getSaldoTemporale();
+            distributor.resetSaldoTemporale();
+            distributorService.saveEntity(distributor);
+            
 			return new PurchaseResult(
 						false, 
 						"Prodotto non trovato", 
 						null, 
-						request.insertedAmount(), 
+						saldoDaRestituire, 
 						LocalDateTime.now()
 					);
+		}
 
 		
-		// 3. Verifica quantità disponibile
-		if(product.getQuantity() < request.quantity())
+// 		3. Verifica quantità disponibile
+		if(product.getQuantity() < request.quantity()) {
+			
+			// Restituisce il saldo accumulato
+            BigDecimal saldoDaRestituire = distributor.getSaldoTemporale();
+            distributor.resetSaldoTemporale();
+            distributorService.saveEntity(distributor);
+		
 			return new PurchaseResult(
 					false,
 					"Quantità non disponibile",
 					null,
-					request.insertedAmount(),
+					saldoDaRestituire,
 					LocalDateTime.now()
 				);
+		}
 		
+// 		4. AGGIUNGI L'IMPORTO AL SALDO TEMPORALE
+        distributor.addToSaldoTemporale(request.insertedAmount());
+        distributorService.saveEntity(distributor);
+        
+        BigDecimal saldoAttuale = distributor.getSaldoTemporale();
+        BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(request.quantity()));
+
 		
-		// 4. Verifica che l'importo sia sufficiente
-		BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(request.quantity()));
-		
-		if (request.insertedAmount().compareTo(totalPrice) < 0)
+//		 5. Verifica che il saldo sia sufficiente
+		if (saldoAttuale.compareTo(totalPrice) < 0) {
+			
+			BigDecimal mancante = totalPrice.subtract(saldoAttuale);
+			
 			return new PurchaseResult(
 						false, 
-						String.format("importo insufficiente. Richiesto : €%.2f", totalPrice), 
+						String.format("importo insufficiente. Richiesto : €%.2f, mancano €%.2f", saldoAttuale, mancante ), 
 						null, 
-						request.insertedAmount(),
+						null,											// Non restituisce resto parziale (l'importo rimane nel saldo)
 						LocalDateTime.now()
 					);
+		}
+		
+// 		6. Calcola resto (differenza tra saldo accumulato e prezzo)
+		BigDecimal change = saldoAttuale.subtract(totalPrice);
 
 		
-		// 5. Calcola resto
-//		Double change = request.insertedAmount() - totalPrice;
-		BigDecimal change = request.insertedAmount().subtract(totalPrice);
-
-		
-		// 6. Verifica disponibilità resto in cassa
+// 		7. Verifica disponibilità resto in cassa
 		CashRegister cashRegister = distributor.getCashRegister();
 		
-		if (cashRegister.getTotalCash().compareTo(change) < 0)
+		if (cashRegister.getTotalCash().compareTo(change) < 0) {
+			
+			 // Restituisci TUTTO il saldo temporale
+            BigDecimal totaleDaRestituire = distributor.getSaldoTemporale();
+            distributor.resetSaldoTemporale();
+            distributorService.saveEntity(distributor);
+			
 			return new PurchaseResult(
 						false, 
 						"Impossibile erogare il resto. Riprova con importo esatto", 
 						null, 
-						request.insertedAmount(), 
+						totaleDaRestituire, 
 						LocalDateTime.now()
 					);
+		}
 
-
-		// 7. Registra vendita 
+// 		8. Registra vendita 
 		SalesRegister newSale = SalesRegister.builder()
 					.saleDate(LocalDateTime.now())
 					.soldQuantity(request.quantity())
@@ -110,23 +157,29 @@ public class VendingMachineService {
 		salesRegisterService.saveEntity(newSale);
 		
 
-		// 8. Aggiorna cassa --
+// 		9. Aggiorna cassa --
 		cashRegister.setTotalCash(cashRegister.getTotalCash().add(totalPrice));
 		cashRegisterService.saveEntity(cashRegister);
 		
 
-		// 9. Decrementa scorte --
+// 		10. Decrementa scorte --
 		product.setQuantity(product.getQuantity() - request.quantity());
 		productService.saveEntity(product);
 		
 		
-		// 10. Ritorna risultato
+// 		11. RESET SALDO TEMPORALE dopo acquisto completato
+        BigDecimal restoDaRestituire = change; 											// Salva il resto prima di resettare
+        distributor.resetSaldoTemporale();
+        distributorService.saveEntity(distributor);
+		
+        
+// 		12. Ritorna risultato
 		ProductDto pDto = ProductMapperDto.toDto(product);
 		return new PurchaseResult(
 					true, 
 					"Acquisto effettuato con successo!", 
 					pDto, 
-					change, 
+					restoDaRestituire, 
 					LocalDateTime.now()
 				);
 		
@@ -141,7 +194,54 @@ public class VendingMachineService {
 		}
 
 	}
+	
+	
+// ------------------------------------------------
+	
+	
+	@Transactional
+	public PurchaseResult annullaOperazioneERestituisciSaldo(Long distributorId) {
+	    try {
+	        Distributor distributor = distributorService.getEntityById(distributorId);
+	        
+	        if (distributor == null) {
+	            return new PurchaseResult(
+	                false,
+	                "Distributore non trovato",
+	                null,
+	                BigDecimal.ZERO,
+	                LocalDateTime.now()
+	            );
+	        }
+	        
+	        BigDecimal saldoDaRestituire = distributor.getSaldoTemporale();
+	        
+	        // Reset del saldo temporale
+	        distributor.resetSaldoTemporale();
+	        distributorService.saveEntity(distributor);
+	        
+	        return new PurchaseResult(
+	            false,
+	            "Operazione annullata. Importo restituito: €" + saldoDaRestituire,
+	            null,
+	            saldoDaRestituire,
+	            LocalDateTime.now()
+	        );
+	        
+	    } catch (Exception e) {
+	        return new PurchaseResult(
+	            false,
+	            "Errore durante l'annullamento: " + e.getMessage(),
+	            null,
+	            BigDecimal.ZERO,
+	            LocalDateTime.now()
+	        );
+	    }
+	}
 
+	
+// -------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------------- //
 	
 	
 	// TODO: Metodo per inserimento denaro
@@ -150,8 +250,5 @@ public class VendingMachineService {
 		return null;
 	}
 
-	// TODO: Metodo per annullamento transazione
-	public void cancelTransaction(Long distributorId) {
-		// Resetta saldo temporaneo
-	}
+	
 }

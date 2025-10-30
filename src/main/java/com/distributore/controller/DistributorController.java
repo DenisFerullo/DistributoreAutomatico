@@ -11,16 +11,16 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/distributore")
+@RequestMapping("/distributor")
 public class DistributorController {
 
-	private final DistributorService distributoreService;
+	private final DistributorService distributorService;
 
 	@GetMapping("/view")
 	public ResponseEntity<List<DistributorDto>> mostraListaDistributori() {
 
-		List<DistributorDto> distributore = distributoreService.getAllAsDto();
+		List<DistributorDto> distributor = distributorService.getAllAsDto();
 
-		return ResponseEntity.ok(distributore);
+		return ResponseEntity.ok(distributor);
 	}
 }

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import com.distributore.dto.ProductDto;
 import com.distributore.entity.Product;
 import com.distributore.mapperDto.ProductMapperDto;
+import com.distributore.repository.DistributorRepository;
+import com.distributore.repository.InventoryRepository;
 import com.distributore.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -13,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 public class ProductService {
 
 	private final ProductRepository productRepository;
+	private final DistributorRepository distributorRepository;
+	private final InventoryRepository inventoryRepository;
 
 // -------------------------------------------------------------------------------------------------- //
 	
@@ -26,23 +30,23 @@ public class ProductService {
 
 // ------------
 
-	public List<Product> getInventoryAsEntity() {
+	public List<Product> getAllAsEntity() {
 		return productRepository.findAll();
 	}
 	
-	public List<ProductDto> getInventoryAsDto() {
-		return getInventoryAsEntity().stream()
+	public List<ProductDto> getAllAsDto() {
+		return getAllAsEntity().stream()
 				.map(ProductMapperDto::toDto).toList();
 	}
 
 // ------------
 
-	public Product getEntityByNome(String nome) {
-		return productRepository.findDistinctByName(nome);
+	public Product getEntityByName(String name) {
+		return productRepository.findDistinctByName(name);
 	}
 	
-	public ProductDto getDtoByNome(String nome) {
-		return ProductMapperDto.toDto(getEntityByNome(nome));
+	public ProductDto getDtoByName(String name) {
+		return ProductMapperDto.toDto(getEntityByName(name));
 	}
 
 //-------------------------------------------------------------------------------------------------- //
@@ -56,7 +60,7 @@ public class ProductService {
 		saveEntity(ProductMapperDto.toEntity(p));
 	}
 	
-	// ------------
+// ------------
 
 	// FIXME: Sviluppare i metodi del ProductService in versione Entity e Dto - EDIT
 	public ProductDto edit(ProductDto pDto, Long id) {
@@ -96,5 +100,22 @@ public class ProductService {
 		}
 		return false;
 	}
+	
+// ------------
+
+
+	public void deleteProduct(Long productId) {
+        // 1. Verifica se il prodotto esiste
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new RuntimeException("Prodotto non trovato con ID: " + productId));
+        
+        // 2. Rimuovi il prodotto da tutti i distributor (per evitare constraint violation)
+        distributorRepository.removeProductFromAllDistributors(productId);
+        
+        inventoryRepository.removeProductFromAllInventories(productId);
+        
+        // 3. Elimina il prodotto
+        productRepository.delete(product);
+    }
 
 }

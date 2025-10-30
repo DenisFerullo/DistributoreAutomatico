@@ -1,5 +1,6 @@
 package com.distributore.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
@@ -57,6 +58,9 @@ public class Distributor {
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 	
+	@Column(name = "saldo_temporale", precision = 10, scale = 2)
+	private BigDecimal saldoTemporale = BigDecimal.ZERO;
+	
 	@OneToOne(mappedBy = "distributor", cascade = CascadeType.ALL)
 	private CashRegister cashRegister;
 	
@@ -65,9 +69,33 @@ public class Distributor {
 	private Location location;
 	
 	@ManyToMany
-	@JoinTable(name = "distributor_products", 
+	@JoinTable(name = "distributor_products" , 
 				joinColumns = @JoinColumn(name = "distributor_id"), 
 				inverseJoinColumns = @JoinColumn(name = "product_id")
 			)
 	private List<Product> products;
+	
+
+// --------------------------------------------------------------------------- 
+
+	
+	 // METODO PER AGGIUNGERE IMPORTI
+    public void addToSaldoTemporale(BigDecimal amount) {
+        if (this.saldoTemporale == null) {
+            this.saldoTemporale = BigDecimal.ZERO;
+        }
+        this.saldoTemporale = this.saldoTemporale.add(amount);
+    }
+    
+    // METODO PER RESETTARE IL SALDO
+    public void resetSaldoTemporale() {
+        this.saldoTemporale = BigDecimal.ZERO;
+    }
+    
+    // METODO PER OTTENERE IL SALDO ATTUALE
+    public BigDecimal getSaldoTemporale() {
+        return saldoTemporale != null ? saldoTemporale : BigDecimal.ZERO;
+    }
+    
+   
 }

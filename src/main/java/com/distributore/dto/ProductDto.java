@@ -15,6 +15,27 @@ public record  ProductDto (
 			Long categoryId,
 			LocalDateTime createdAt,
 			LocalDateTime updatedAt
-		)
-{
+		) {
+	
+	public record Summary (
+			Long id,
+			String sku,
+			String name,
+			BigDecimal price
+			) {};
+	
+	public record Details (
+			Long id,
+			String sku,
+			String name,
+			BigDecimal price,
+			Long quantity,
+			Integer re_StockValue,
+			Long categoryId,
+			LocalDateTime createdAt,
+			LocalDateTime updateAt
+			) {};
+	
 }
+
+

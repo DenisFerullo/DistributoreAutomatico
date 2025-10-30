@@ -7,6 +7,6 @@ public record PurchaseRequest(
 		Long productId,
 	    Long distributorId, 
 	    BigDecimal insertedAmount,
-	    Integer quantity
-	
+	    Integer quantity,
+	    boolean resetSaldo			// true = nuova transazione, false = aggiungi importo 
 		) {}

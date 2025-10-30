@@ -15,8 +15,6 @@ import com.distributore.dto.ProductDto;
 import com.distributore.service.ProductService;
 import lombok.RequiredArgsConstructor;
 
-
-
 @RestController
 @RequestMapping("/product")
 @RequiredArgsConstructor
@@ -24,109 +22,67 @@ public class ProductController {
 
 	private final ProductService productService;
 
-	
 // -------------------------------------------------------------------------------------------------- //
-	
-	
+
 	@GetMapping("/view")
 	public ResponseEntity<List<ProductDto>> mostraListaProdotti() {
-		return ResponseEntity
-				.ok(
-						productService
-							.getInventoryAsDto()
-					);
-	}
-	
-	@GetMapping("/info/{name}")
-	public ResponseEntity<Long> mostraQuantitaDelProdottoConNome(@PathVariable String nome) {
-		return ResponseEntity
-				.ok(
-						productService
-							.getDtoByNome(nome)
-						.quantity()
-					);
-	}
-	
-	
-	@GetMapping("/infoProdotto/{id}")
-	public ResponseEntity<ProductDto> mostraProdotto(@PathVariable Long id) {
-		return ResponseEntity
-				.ok(
-						productService
-						.getDtoById(id)
-						);
-	}
-	
- 
-// -------------------------------------------------------------------------------------------------- //
-	
-	
-	@PostMapping("/add")
-	public ResponseEntity<ProductDto> salvaProdotto(@RequestBody ProductDto pDto) {
-		return ResponseEntity
-				.status(HttpStatus.CREATED)
-				.body(
-						productService
-							.addToInventory(pDto)
-					);
+		return ResponseEntity.ok(productService.getAllAsDto());
 	}
 
-	
+	@GetMapping("/info/{name}")
+	public ResponseEntity<Long> mostraQuantitaDelProdottoConNome(@PathVariable String name) {
+		return ResponseEntity.ok(productService.getDtoByName(name).quantity());
+	}
+
+	@GetMapping("/infoProdotto/{id}")
+	public ResponseEntity<ProductDto> mostraProdotto(@PathVariable Long id) {
+		return ResponseEntity.ok(productService.getDtoById(id));
+	}
+
 // -------------------------------------------------------------------------------------------------- //
-	
-	
+
+	@PostMapping("/add")
+	public ResponseEntity<ProductDto> salvaProdotto(@RequestBody ProductDto pDto) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(productService.addToInventory(pDto));
+	}
+
+// -------------------------------------------------------------------------------------------------- //
+
 	@PutMapping("/edit/{id}")
 	public ResponseEntity<ProductDto> modificaProdotto(@PathVariable Long id, @RequestBody ProductDto pDto) {
-		
+
 		ProductDto updatedDto = productService.edit(pDto, id);
 
 		if (updatedDto != null) {
-	        return ResponseEntity
-	        		.ok(updatedDto);
-	    } 
-		else {
-	        return ResponseEntity
-	        		.notFound().build();
-	    }
-	}
-
-	
-	@PutMapping("/sell/{id}")
-	public ResponseEntity<?> vendiProdotto(@PathVariable Long id){
-		// Non è necessario passare un intero Dto come input, 
-		// 		perché lo andremo a ricercare attraverso l'id. 
-		// Non è neccesario passare la quantità da modificare, 
-		// 		perché i prodotti sono erogati uno alla volta (sottrazione -1 alla volta). 
-		
-		try {
-			return ResponseEntity
-					.ok(
-						productService
-							.sell(id)
-						);
-		} catch (RuntimeException e) {
-			return ResponseEntity
-					.badRequest()
-					.body(e.getMessage());
+			return ResponseEntity.ok(updatedDto);
+		} else {
+			return ResponseEntity.notFound().build();
 		}
-		
-		
 	}
-	
-	
+
+	@PutMapping("/sell/{id}")
+	public ResponseEntity<?> vendiProdotto(@PathVariable Long id) {
+
+		try {
+			return ResponseEntity.ok(productService.sell(id));
+		} catch (RuntimeException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+
+	}
+
 // -------------------------------------------------------------------------------------------------- //
-	
-	
+
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Void> eliminaProdotto(@PathVariable Long id) {
-		 boolean wasDeleted = productService.delete(id);
-		    return wasDeleted ? 
-		           ResponseEntity.noContent().build() :  // 204 se cancellato
-		           ResponseEntity.notFound().build();    // 404 se non esisteva
+	public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+		try {
+			productService.deleteProduct(id);
+			return ResponseEntity.noContent().build();
+		} catch (RuntimeException e) {
+			return ResponseEntity.ok().body("Prodotto non trovato o già eliminato");
+		}
 	}
 
-	
 // -------------------------------------------------------------------------------------------------- //
 
-	
 }
