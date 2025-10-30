@@ -58,6 +58,7 @@ public class Distributor {
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 	
+	@Builder.Default
 	@Column(name = "saldo_temporale", precision = 10, scale = 2)
 	private BigDecimal saldoTemporale = BigDecimal.ZERO;
 	
